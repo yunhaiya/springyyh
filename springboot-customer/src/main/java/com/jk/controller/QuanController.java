@@ -26,6 +26,7 @@ public class QuanController {
         List<QxModel> quan=service.queryQuanList();
         System.out.println("111");
         System.out.println("222");
+        System.out.println("333");
         return quan;
     }
     //删除权限
