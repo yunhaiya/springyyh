@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 这是jquery的核心包  -->
+    <script type="text/javascript" src="../jquery.min.js"></script>
+    <script src="../highcharts/code/highcharts.js"></script>
+    <script src="../highcharts/code/modules/exporting.js"></script>
+    <script src="../highcharts/code/modules/export-data.js"></script>
+
+</head>
+<body>
+<div id="zhudiv" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+<div id="miandiv" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+</body>
+<script>
+    $(function () {
+        $.ajax({
+            url: "../queryZhu",
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                var xtext = [];//X轴TEXT
+                var nums = [];//y轴数量
+                for (var i = 0; i < data.length; i++) {
+                    nums.push(data[i].count);
+                    xtext.push(data[i].time);
+                }
+                var chart = Highcharts.chart('zhudiv', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: '月平均销售量'
+                    },
+                    subtitle: {
+                        text: '数据来源: YnuHai.com'
+                    },
+                    xAxis: {
+                        categories: xtext,
+                        crosshair: true
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '销售量 (辆)'
+                        }
+                    },
+                    tooltip: {
+                        // head + 每个 point + footer 拼接成完整的 table
+                        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                        pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                            '<td style="padding:0"><b>{point.y:.1f} 辆</b></td></tr>',
+                        footerFormat: '</table>',
+                        shared: true,
+                        useHTML: true
+                    },
+                    plotOptions: {
+                        column: {
+                            borderWidth: 0
+                        }
+                    },
+                    series: [{
+                        name: '销售数量',
+                        data: nums
+                    }]
+                });
+            }, error: function () {
+                alert("查询失败")
+            }
+        })
+
+    })
+
+
+    //-----------------------------------------------------面积图------------------------------------------
+    $(function () {
+        $.ajax({
+            url: "../queryMian",
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                var xtext = [];//X轴TEXT
+                var nums = [];//y轴数量
+                for (var i = 0; i < data.length; i++) {
+                    nums.push(data[i].count);
+                    xtext.push(data[i].time);
+                }
+                var chart = Highcharts.chart('container', {
+                    chart: {
+                        type: 'area'
+                    },
+                    title: {
+                        text: '美苏核武器库存量'
+                    },
+                    subtitle: {
+                        text: '数据来源:'
+                    },
+                    xAxis: {
+                        allowDecimals: false
+                    },
+                    yAxis: {
+                        title: {
+                            text: '核武库国家'
+                        },
+                        labels: {
+                            formatter: function () {
+                                return this.value / 1000 + 'k';
+                            }
+                        }
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name} 制造 <b>{point.y:,.0f}</b>枚弹头'
+                    },
+                    plotOptions: {
+                        area: {
+                            pointStart: 1940,
+                            marker: {
+                                enabled: false,
+                                symbol: 'circle',
+                                radius: 2,
+                                states: {
+                                    hover: {
+                                        enabled: true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        name: '美国',
+                        data: [null, null, null, null, null, 6, 11, 32, 110, 235, 369, 640,
+                            1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126,
+                            27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662,
+                            26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
+                            24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586,
+                            22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950,
+                            10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104]
+                    }, {
+                        name: '苏联/俄罗斯',
+                        data: [null, null, null, null, null, null, null, null, null, null,
+                            5, 25, 50, 120, 150, 200, 426, 660, 869, 1060, 1605, 2471, 3322,
+                            4238, 5221, 6129, 7089, 8339, 9399, 10538, 11643, 13092, 14478,
+                            15915, 17385, 19055, 21205, 23044, 25393, 27935, 30062, 32049,
+                            33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000, 37000,
+                            35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
+                            21000, 20000, 19000, 18000, 18000, 17000, 16000]
+                    }]
+                });
+            }, error: function () {
+                alert("查询失败")
+            }
+        })
+
+    })
+
+</script>
+</html>

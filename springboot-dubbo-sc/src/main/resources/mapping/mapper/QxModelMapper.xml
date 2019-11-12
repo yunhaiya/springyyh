@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.QxModelMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.QxModel" >
+    <id column="qxid" property="qxid" jdbcType="INTEGER" />
+    <result column="qxname" property="qxname" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="queryQuanList" resultMap="BaseResultMap" >
+    select 
+    *
+    from y_quanxian
+  </select>
+  <select id="queryQuanByRid" resultType="java.lang.Integer" >
+   select qu.qxid
+	from quan_user qu
+	where qu.usid = #{rid}
+  </select>
+  <delete id="deleteQuan">
+    delete from  y_quanxian where qxid=#{qid}
+  </delete>
+  <select id="queryQuanOne" resultMap="BaseResultMap" >
+    select
+    *
+    from y_quanxian
+    where qxid=#{q}
+  </select>
+
+  <update id="updateQuanOne">
+    update
+    y_quanxian
+    set qxname=#{q.qxname}
+    where
+    qxid=#{q.qxid}
+  </update>
+  <insert id="addQuanAll" parameterType="java.util.List" >
+    insert into t_car (qxid,qxname)
+    VALUES
+    <foreach collection="list" item="l" separator=",">
+      (#{l.qxid},#{l.qxname})
+    </foreach>
+
+  </insert>
+
+  <select id="queryShowBing" resultType="java.util.LinkedHashMap" >
+     select
+     sum(xprice) y,
+     DATE_FORMAT(xdate,'%Y-%m') name
+     from y_xiaoshou
+	 where Date(xdate) between '2019-01-01' and '2020-01-01'
+	 GROUP BY DATE_FORMAT(xdate,'%Y-%m')
+  </select>
+  <select id="queryZhou" resultType="java.util.LinkedHashMap" >
+     SELECT DATE_FORMAT(xdate,'%Y-%u') as time,sum(xprice)  count FROM y_xiaoshou  GROUP BY  time
+  </select>
+
+  <select id="queryZhu" resultType="java.util.LinkedHashMap" >
+        SELECT
+        DATE_FORMAT(xdate,'%Y-%m-%d') as time,
+        sum(xprice) count
+        FROM y_xiaoshou  GROUP BY  time
+  </select>
+
+  <select id="queryMian" resultType="java.util.LinkedHashMap" >
+       select sum(xprice) xiao,xname 名称 from y_xiaoshou GROUP BY xname
+  </select>
+
+
+  <insert id="addQuanOne">
+    INSERT INTO `y_quanxian` (qxname) VALUES (#{q.qxname})
+  </insert>
+</mapper>

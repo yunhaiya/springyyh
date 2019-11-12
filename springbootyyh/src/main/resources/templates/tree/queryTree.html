@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table id="tree-table"></table>
+<div id="updatetree-div"></div>
+<script>
+
+    $(function(){
+        $('#tree-table').datagrid({
+            url:'../queryTreeList2',
+            fitColumns:true,
+            striped:true,
+            ctrlSelect:true,
+            method:"post",
+            loadMsg:"数据库加载中。。。。。。。。。。。。。。。。。。",
+            pagination:true,
+            pagePosition:"bottom",
+            columns:[
+                [
+                    {field:'id',title:'编号',width:100},
+                    {field:'text',title:'文本',width:100},
+                    {field:'pid',title:'父id',width:100},
+                    {field:'url',title:'路径',width:100},
+                    {field: 'act',title: '操作', width: 100,
+                        formatter:function(value,row,index){
+                            var str="<input type='button' value='修改'onclick='updateTree(\""+row.id+"\")'>";
+                            str+="<input type='button' value='删除'onclick='deleteTree(\""+row.id+"\")'>";
+                            return  str;
+                        }
+                    }
+
+                ]
+            ]
+
+        });
+
+    })
+
+    //---------------------------------------------删除--------------------------------------
+    function deleteTree(ids){
+        $.ajax({
+            type:"post",
+            url:"http://127.0.0.1:8080/deleteTree",
+            data:{ids:ids},
+            success:function(){
+                $("#tree-table").datagrid('load')
+            }
+        })
+    }
+    //---------------------------------------------修改--------------------------------------
+    function updateTree(id){
+
+        $('#update-div').dialog({
+            title: '添加电器',
+            width: 400,
+            height:400,
+            href: 'http://127.0.0.1:8080/toupdateTree?ids='+id,
+            modal:false,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+// 				提交form表单 update-form
+                    $('#update-quan-form').form('submit', {
+                        url:"http://127.0.0.1:8080/updateTree",
+                        onSubmit: function(){
+// 				       	提交请求前执行该函数
+// 				       	函数内一般进行表单验证
+// 				       	如果return false，则终止表单提交
+// 						如果 return  true，则照常提交表单
+                        },
+                        success:function(){
+
+                            $("#tree-table").datagrid("reload")
+                            $('#updatetree-div').dialog('close');
+                        }
+                    });
+
+                }
+            },{
+                text:'关闭',
+                handler:function(){
+                    $('#updatetree-div').dialog('close')
+                }
+            }]
+        });
+    }
+</script>
+
+</body>
+</html>

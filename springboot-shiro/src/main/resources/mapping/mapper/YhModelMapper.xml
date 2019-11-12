@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.YhModelMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.YhModel" >
+    <id column="usid" property="usid" jdbcType="INTEGER" />
+    <result column="usname" property="usname" jdbcType="VARCHAR" />
+    <result column="ustype" property="ustype" jdbcType="VARCHAR" />
+    <result column="uspwd" property="uspwd" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="queryUserByName" resultMap="BaseResultMap" >
+  SELECT * from t_yh where usname=#{usname}
+  </select>
+
+</mapper>

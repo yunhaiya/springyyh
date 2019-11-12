@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.XsModelMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.XsModel" >
+    <id column="xid" property="xid" jdbcType="INTEGER" />
+    <result column="xname" property="xname" jdbcType="VARCHAR" />
+    <result column="xtype" property="xtype" jdbcType="VARCHAR" />
+    <result column="xdate" property="xdate" jdbcType="TIMESTAMP" />
+    <result column="xprice" property="xprice" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    xid, xname, xtype, xdate, xprice
+  </sql>
+  <select id="queryXs"  resultType="java.util.LinkedHashMap">
+     select
+     sum(xprice) y,
+     DATE_FORMAT(xdate,'%Y-%m') name
+     from y_xiaoshou
+	 where Date(xdate) between '2019-01-01' and '2020-01-01'
+	 GROUP BY DATE_FORMAT(xdate,'%Y-%m')
+  </select>
+
+
+</mapper>

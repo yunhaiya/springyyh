@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.ShuModelMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.ShuModel" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="queryTree" resultMap="BaseResultMap"  >
+    select *
+    from y_tree
+    where pid = #{pid}
+  </select>
+  <select id="queryTreeList2" resultMap="BaseResultMap"  >
+    select *
+    from y_tree
+  </select>
+  <delete id="deleteTree">
+  	delete from y_tree where id = #{ids}
+  </delete>
+</mapper>

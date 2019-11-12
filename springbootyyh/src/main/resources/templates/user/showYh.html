@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table id="user-table"></table>
+<div id="userquan-div"></div>
+
+<script>
+    $(function(){
+        $('#user-table').datagrid({
+            url:'../queryYh',
+            fitColumns:true,
+            striped:true,
+            ctrlSelect:true,
+            method:"post",
+            loadMsg:"数据库加载中。。。。。。。。。。。。。。。。。。",
+            pagination:true,
+            pagePosition:"bottom",
+            columns:[
+                [
+                    {field:'userid',title:'编号ID',width:100},
+                    {field:'username',title:'账号',width:100},
+                    {field:'userpwd',title:'密码',width:100},
+                    {field: 'act',title: '操作', width: 100,
+                        formatter:function(value,row,index){
+                            var str = "<input type='button' onclick='changeRoleMenu("+row.userid+",\""+row.username+"\")' value='设置权限'>";
+                            return str;
+                        }
+                    }
+
+                ]
+            ]
+
+        });
+
+    })
+//-------------------------------------------设置权限--------------------------------------------------
+    function changeRoleMenu(rid,rname){
+        $('#userquan-div').dialog({
+            title: '设置'+rname+'de权限',
+            width: 400,
+            height: 200,
+            closed: false,
+            href: '../queryQuanXian?rid='+rid,
+            modal: true,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+// 			1.获取被选中的树节点——————————最终得到多个权限id字符串
+                    var menuArr = $('#rolemenu-ul').tree("getChecked");
+// 			2.获取半选中状态的节点——————indeterminate 指的是不确定的半选中状态的节点
+                    var nodes = $('#rolemenu-ul').tree('getChecked', 'indeterminate');
+                    console.info(nodes)
+                    var mids = "";
+                    for (var i = 0; i < menuArr.length; i++) {
+                        mids += ","+menuArr[i].id;
+                    }
+                    for (var i = 0; i < nodes.length; i++) {
+                        mids += ","+nodes[i].id;
+                    }
+
+                    mids = mids.substring(1);
+// 			3.ajax请求后台保存数据
+                    $.ajax({
+                        type:"post",
+                        url:"../saveQuanxian",
+                        data:{rid:rid,menuIds:mids},
+                        success:function(msg){
+                            if(msg == 'suc'){
+                                $('#userquan-div').dialog("close")
+                                $.messager.show({
+                                    title:'新消息',
+                                    msg:'操作成功',
+                                    timeout:2000,
+                                    showType:'slide'
+                                });
+
+                            }
+                        }
+                    })
+                }
+            },{
+                text:'取消',
+                handler:function(){
+                    $('#userquan-div').dialog("close")
+                }
+            }]
+        });
+    }
+</script>
+</body>
+</html>

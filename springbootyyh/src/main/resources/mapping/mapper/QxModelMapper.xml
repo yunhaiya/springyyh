@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jk.mapper.QxModelMapper" >
+  <resultMap id="BaseResultMap" type="com.jk.model.QxModel" >
+    <id column="qxid" property="qxid" jdbcType="INTEGER" />
+    <result column="qxname" property="qxname" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="queryQuanList" resultMap="BaseResultMap" >
+    select 
+    *
+    from y_quanxian
+  </select>
+  <select id="queryQuanByRid" resultType="java.lang.Integer" >
+   select qu.qxid
+	from quan_user qu
+	where qu.usid = #{rid}
+  </select>
+  <delete id="deleteQuan">
+    delete from  y_quanxian where qxid=#{qid}
+  </delete>
+  <select id="queryQuanOne" resultMap="BaseResultMap" >
+    select
+    *
+    from y_quanxian
+    where qxid=#{q}
+  </select>
+
+  <update id="updateQuanOne">
+    update
+    y_quanxian
+    set qxname=#{q.qxname}
+    where
+    qxid=#{q.qxid}
+  </update>
+
+  <insert id="addQuanOne">
+    INSERT INTO `y_quanxian` (qxname) VALUES (#{q.qxname})
+  </insert>
+
+  <delete id="deleteQuanByRid">
+  	delete from quan_user where usid = #{rid}
+  </delete>
+
+  <insert id="saveQuanxian">
+  insert into quan_user(usid,qxid) values
+  <foreach item="mid" index="index" collection="qxid" separator=",">
+    (#{rid},${mid})
+  </foreach>
+  </insert>
+</mapper>

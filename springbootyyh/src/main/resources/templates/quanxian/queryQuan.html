@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a id="stu-add"  class="easyui-linkbutton" data-options="iconCls:'icon-search'"></a>
+<table id="quan-table"></table>
+
+    <div id="add-div"></div>
+    <div id="update-div"></div>
+
+<script>
+    //--------------------------------------查询--------------------------------------
+    $(function(){
+        $('#quan-table').datagrid({
+            url:'../queryQuan',
+            fitColumns:true,
+            striped:true,
+            ctrlSelect:true,
+            method:"post",
+            loadMsg:"数据库加载中。。。。。。。。。。。。。。。。。。",
+            pagination:true,
+            pagePosition:"bottom",
+            columns:[
+                [
+                    {field:'qxid',title:'编号ID',width:100},
+                    {field:'qxname',title:'权限',width:100},
+                    {field: 'act',title: '操作', width: 100,
+                        formatter:function(value,row,index){
+                        var str="<input type='button' value='修改'onclick='updateQuan(\""+row.qxid+"\")'>";
+                            str+="<input type='button' value='删除'onclick='deleteQuan(\""+row.qxid+"\")'>";
+                            return  str;
+                        }
+                    }
+
+                ]
+            ]
+
+        });
+
+    })
+    //---------------------------------------------添加--------------------------------------
+    $("#stu-add").linkbutton({
+        onClick:function(){
+
+            $('#add-div').dialog({
+                title: '添加权限',
+                width: 400,
+                height:400,
+                href: 'http://127.0.0.1:8080/toadd',
+                modal:false,
+                buttons:[{
+                    text:'保存',
+                    handler:function(){
+// 				提交form表单 update-form
+                        $('#add-quan-form').form('submit', {
+                            url:"http://127.0.0.1:8080/addQuanOne",
+                            onSubmit: function(){
+// 				       	提交请求前执行该函数
+// 				       	函数内一般进行表单验证
+// 				       	如果return false，则终止表单提交
+// 						如果 return  true，则照常提交表单
+                            },
+                            success:function(data){
+                                $("#quan-table").datagrid("reload")
+                                $('#add-div').dialog('close');
+                            }
+                        });
+
+                    }
+                },{
+                    text:'关闭',
+                    handler:function(){
+                        $('#add-div').dialog('close')
+                    }
+                }]
+            });
+        }
+    })
+    //---------------------------------------------删除--------------------------------------
+    function deleteQuan(ids){
+        $.ajax({
+            type:"post",
+            url:"http://127.0.0.1:8080/deleteQuan",
+            data:{ids:ids},
+            success:function(){
+
+                $("#quan-table").datagrid('load')
+            }
+        })
+    }
+    //---------------------------------------------修改--------------------------------------
+    function updateQuan(id){
+
+        $('#update-div').dialog({
+            title: '添加电器',
+            width: 400,
+            height:400,
+            href: 'http://127.0.0.1:8080/toqueryQuanOne?ids='+id,
+            modal:false,
+            buttons:[{
+                text:'保存',
+                handler:function(){
+// 				提交form表单 update-form
+                    $('#update-quan-form').form('submit', {
+                        url:"http://127.0.0.1:8080/updateQuanOne",
+                        onSubmit: function(){
+// 				       	提交请求前执行该函数
+// 				       	函数内一般进行表单验证
+// 				       	如果return false，则终止表单提交
+// 						如果 return  true，则照常提交表单
+                        },
+                        success:function(){
+
+                                $("#quan-table").datagrid("reload")
+                                $('#update-div').dialog('close');
+                        }
+                    });
+
+                }
+            },{
+                text:'关闭',
+                handler:function(){
+                    $('#update-div').dialog('close')
+                }
+            }]
+        });
+    }
+
+</script>
+</body>
+</html>
