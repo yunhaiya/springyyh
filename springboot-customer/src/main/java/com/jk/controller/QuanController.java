@@ -23,8 +23,9 @@ public class QuanController {
     @RequestMapping("queryQuan")
     @ResponseBody
     public List<QxModel> queryQuan() {
-
-        return service.queryQuanList();
+        List<QxModel> quan=service.queryQuanList();
+        System.out.println("111");
+        return quan;
     }
     //删除权限
     @RequestMapping("deleteQuan")
